@@ -1,5 +1,9 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router'
+import { z } from 'zod'
 
+import PasswordInput from '@/components/password-input'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -9,28 +13,89 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
+const loginSchema = z.object({
+  email: z
+    .string()
+    .email({ message: 'E-mail inválido.' })
+    .trim()
+    .min(1, { message: 'O e-mail é obrigatório.' }),
+  password: z
+    .string()
+    .trim()
+    .min(6, { message: 'A senha deve ter no mínimo 6 caracteres.' }),
+})
+
 export function LoginPage() {
+  const methods = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
+
+  const handleSubmit = (data) => {
+    console.log(data)
+  }
+
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center gap-3">
-      <Card className="w-[500px]">
-        <CardHeader>
-          <CardTitle>Acesse a sua conta</CardTitle>
-          <CardDescription>Insira seus dados abaixo.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Input type="email" placeholder="Digite seu e-mail" />
-          <Input type="password" placeholder="Digite sua senha" />
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full">Acessar conta</Button>
-        </CardFooter>
-      </Card>
+      <Form {...methods}>
+        <form onSubmit={methods.handleSubmit(handleSubmit)}>
+          <Card className="w-[500px]">
+            <CardHeader>
+              <CardTitle>Entre na sua conta</CardTitle>
+              <CardDescription>Insira seus dados abaixo.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <FormField
+                control={methods.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Digite seu e-mail" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={methods.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Senha</FormLabel>
+                    <FormControl>
+                      <PasswordInput {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter>
+              <Button className="w-full">Cria conta</Button>
+            </CardFooter>
+          </Card>
+        </form>
+      </Form>
       <div className="flex items-center justify-center">
-        <p className="text-center opacity-50">Não possui uma conta?</p>
+        <p className="text-center opacity-50">Ainda não possui uma conta?</p>
         <Button variant="link" className="px-1 text-white" asChild>
-          <Link to="/signup">Criar conta</Link>
+          <Link to="/signup">Crie agora</Link>
         </Button>
       </div>
     </div>
