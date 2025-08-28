@@ -33,7 +33,7 @@ export default [
       ...reactHooks.configs.recommended.rules,
       'react/jsx-no-target-blank': 'off',
       'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
+      'simple-import-sort/exports': 'off',
       'react-refresh/only-export-components': 'off',
       'react/prop-types': 'off',
     },
