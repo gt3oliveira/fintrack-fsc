@@ -34,10 +34,7 @@ export default [
       'react/jsx-no-target-blank': 'off',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      'react-refresh/only-export-components': 'off',
       'react/prop-types': 'off',
     },
   },
