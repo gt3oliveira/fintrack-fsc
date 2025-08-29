@@ -109,7 +109,6 @@ export function SignUpPage() {
   }, [])
 
   const handleSubmit = (data) => {
-    console.log(data)
     signupMutation.mutate(data, {
       onSuccess: (createdUser) => {
         const accessToken = createdUser.tokens.accessToken
