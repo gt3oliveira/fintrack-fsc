@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 import { toast } from 'sonner'
@@ -84,6 +84,29 @@ export function SignUpPage() {
       terms: false,
     },
   })
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const accessToken = localStorage.getItem('accessToken')
+        const refreshToken = localStorage.getItem('refreshToken')
+        if (!accessToken && !refreshToken) return
+
+        const response = await api.get('/user/me', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        setUser(response.data)
+      } catch (error) {
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('refreshToken')
+        console.error(error)
+      }
+    }
+
+    init()
+  }, [])
 
   const handleSubmit = (data) => {
     console.log(data)
