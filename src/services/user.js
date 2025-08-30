@@ -9,7 +9,13 @@ export const UserService = {
       password: input.password,
     })
 
-    return response.data
+    return {
+      id: response.data.id,
+      firstName: response.data.first_name,
+      lastName: response.data.last_name,
+      email: response.data.email,
+      tokens: response.data.tokens,
+    }
   },
   login: async (input) => {
     const response = await publicApi.post('/user/login', {
@@ -17,10 +23,21 @@ export const UserService = {
       password: input.password,
     })
 
-    return response.data
+    return {
+      id: response.data.id,
+      firstName: response.data.first_name,
+      lastName: response.data.last_name,
+      email: response.data.email,
+      tokens: response.data.tokens,
+    }
   },
   me: async () => {
     const response = await protectedApi.get('/user/me')
-    return response.data
+    return {
+      id: response.data.id,
+      firstName: response.data.first_name,
+      lastName: response.data.last_name,
+      email: response.data.email,
+    }
   },
 }
