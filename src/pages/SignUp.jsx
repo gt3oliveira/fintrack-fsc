@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router'
+import { Link, Navigate } from 'react-router'
 import { z } from 'zod'
 
 import PasswordInput from '@/components/password-input'
@@ -55,7 +55,7 @@ const signupSchema = z
   })
 
 export function SignUpPage() {
-  const { user, signup } = useAuthContext()
+  const { user, signup, isInitialized } = useAuthContext()
 
   const methods = useForm({
     resolver: zodResolver(signupSchema),
@@ -71,8 +71,9 @@ export function SignUpPage() {
 
   const handleSubmit = (data) => signup(data)
 
+  if (isInitialized) return null
   if (user) {
-    return <div>Bem-vindo, {user}!</div>
+    return <Navigate to="/" />
   }
 
   return (
