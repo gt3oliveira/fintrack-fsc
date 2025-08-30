@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { LOCAL_STORAGE_TOKENS_KEYS } from '@/constants/local-storage'
-import { api } from '@/lib/axios'
+import { protectedApi, publicApi } from '@/lib/axios'
 
 export const AuthContext = createContext({
   user: null,
@@ -45,7 +45,7 @@ export const AuthContextProvider = ({ children }) => {
   const signupMutation = useMutation({
     mutationKey: ['signup'],
     mutationFn: async (variables) => {
-      const response = await api.post('/user', {
+      const response = await publicApi.post('/user', {
         first_name: variables.firstName,
         last_name: variables.lastName,
         email: variables.email,
@@ -59,7 +59,7 @@ export const AuthContextProvider = ({ children }) => {
   const loginMutation = useMutation({
     mutationKey: ['login'],
     mutationFn: async (variables) => {
-      const response = await api.post('/user/login', {
+      const response = await publicApi.post('/user/login', {
         email: variables.email,
         password: variables.password,
       })
@@ -108,7 +108,7 @@ export const AuthContextProvider = ({ children }) => {
         const { accessToken, refreshToken } = getTokens()
         if (!accessToken && !refreshToken) return
 
-        const response = await api.get('/user/me')
+        const response = await protectedApi.get('/user/me')
         setUser(response.data)
       } catch (error) {
         setUser(null)
