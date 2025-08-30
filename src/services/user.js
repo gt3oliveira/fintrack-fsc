@@ -11,6 +11,13 @@ export const UserService = {
 
     return response.data
   },
-  login: () => {},
+  login: async (input) => {
+    const response = await publicApi.post('/user/login', {
+      email: input.email,
+      password: input.password,
+    })
+
+    return response.data
+  },
   logout: () => {},
 }
