@@ -4,6 +4,7 @@ import { toast } from 'sonner'
 
 import { LOCAL_STORAGE_TOKENS_KEYS } from '@/constants/local-storage'
 import { protectedApi, publicApi } from '@/lib/axios'
+import { UserService } from '@/services/user'
 
 export const AuthContext = createContext({
   user: null,
@@ -45,14 +46,8 @@ export const AuthContextProvider = ({ children }) => {
   const signupMutation = useMutation({
     mutationKey: ['signup'],
     mutationFn: async (variables) => {
-      const response = await publicApi.post('/user', {
-        first_name: variables.firstName,
-        last_name: variables.lastName,
-        email: variables.email,
-        password: variables.password,
-      })
-
-      return response.data
+      const response = await UserService.signup(variables)
+      return response
     },
   })
 
