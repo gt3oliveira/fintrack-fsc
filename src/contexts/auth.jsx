@@ -3,7 +3,6 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 import { LOCAL_STORAGE_TOKENS_KEYS } from '@/constants/local-storage'
-import { protectedApi } from '@/lib/axios'
 import { UserService } from '@/services/user'
 
 export const AuthContext = createContext({
@@ -99,8 +98,8 @@ export const AuthContextProvider = ({ children }) => {
         const { accessToken, refreshToken } = getTokens()
         if (!accessToken && !refreshToken) return
 
-        const response = await protectedApi.get('/user/me')
-        setUser(response.data)
+        const response = await UserService.me()
+        setUser(response)
       } catch (error) {
         setUser(null)
         console.error(error)

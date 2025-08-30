@@ -1,4 +1,4 @@
-import { publicApi } from '@/lib/axios'
+import { protectedApi, publicApi } from '@/lib/axios'
 
 export const UserService = {
   signup: async (input) => {
@@ -19,5 +19,8 @@ export const UserService = {
 
     return response.data
   },
-  logout: () => {},
+  me: async () => {
+    const response = await protectedApi.get('/user/me')
+    return response.data
+  },
 }
