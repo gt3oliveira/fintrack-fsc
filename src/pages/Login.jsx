@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router'
 import { z } from 'zod'
@@ -23,7 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { AuthContext } from '@/contexts/auth'
+import { useAuthContext } from '@/contexts/auth'
 
 const loginSchema = z.object({
   email: z
@@ -38,7 +37,7 @@ const loginSchema = z.object({
 })
 
 export function LoginPage() {
-  const { user, login } = useContext(AuthContext)
+  const { user, login } = useAuthContext()
 
   const methods = useForm({
     resolver: zodResolver(loginSchema),
@@ -93,7 +92,7 @@ export function LoginPage() {
               />
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Fezer login</Button>
+              <Button className="w-full">Fazer login</Button>
             </CardFooter>
           </Card>
         </form>
