@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
+import { LOCAL_STORAGE_TOKENS_KEYS } from '@/constants/local-storage'
 import { api } from '@/lib/axios'
 
 export const AuthContext = createContext({
@@ -13,11 +14,6 @@ export const AuthContext = createContext({
 })
 
 export const useAuthContext = () => useContext(AuthContext)
-
-const LOCAL_STORAGE_TOKENS_KEYS = {
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
-}
 
 const getTokens = () => {
   return {
@@ -112,11 +108,7 @@ export const AuthContextProvider = ({ children }) => {
         const { accessToken, refreshToken } = getTokens()
         if (!accessToken && !refreshToken) return
 
-        const response = await api.get('/user/me', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
+        const response = await api.get('/user/me')
         setUser(response.data)
       } catch (error) {
         setUser(null)
