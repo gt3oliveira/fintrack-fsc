@@ -12,6 +12,34 @@ export const AuthContext = createContext({
 
 export const useAuthContext = () => useContext(AuthContext)
 
+const LOCAL_STORAGE_TOKENS_KEYS = {
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+}
+
+const getTokens = () => {
+  return {
+    accessToken: localStorage.getItem(LOCAL_STORAGE_TOKENS_KEYS.accessToken),
+    refreshToken: localStorage.getItem(LOCAL_STORAGE_TOKENS_KEYS.refreshToken),
+  }
+}
+
+const setTokens = (tokens) => {
+  localStorage.setItem(
+    LOCAL_STORAGE_TOKENS_KEYS.accessToken,
+    tokens.accessToken
+  )
+  localStorage.setItem(
+    LOCAL_STORAGE_TOKENS_KEYS.refreshToken,
+    tokens.refreshToken
+  )
+}
+
+const removeTokens = () => {
+  localStorage.removeItem(LOCAL_STORAGE_TOKENS_KEYS.accessToken)
+  localStorage.removeItem(LOCAL_STORAGE_TOKENS_KEYS.refreshToken)
+}
+
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null)
 
@@ -44,11 +72,8 @@ export const AuthContextProvider = ({ children }) => {
   const signup = (data) => {
     signupMutation.mutate(data, {
       onSuccess: (createdUser) => {
-        const accessToken = createdUser.tokens.accessToken
-        const refreshToken = createdUser.tokens.refreshToken
         setUser(createdUser)
-        localStorage.setItem('accessToken', accessToken)
-        localStorage.setItem('refreshToken', refreshToken)
+        setTokens(createdUser.tokens)
         toast.success('Conta criada com sucesso!')
       },
       onError: () => {
@@ -62,11 +87,8 @@ export const AuthContextProvider = ({ children }) => {
   const login = (data) => {
     loginMutation.mutate(data, {
       onSuccess: (loginUser) => {
-        const accessToken = loginUser.tokens.accessToken
-        const refreshToken = loginUser.tokens.refreshToken
         setUser(loginUser)
-        localStorage.setItem('accessToken', accessToken)
-        localStorage.setItem('refreshToken', refreshToken)
+        setTokens(loginUser.tokens)
         toast.success('Logado com sucesso!')
       },
       onError: () => {
@@ -78,8 +100,7 @@ export const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const accessToken = localStorage.getItem('accessToken')
-        const refreshToken = localStorage.getItem('refreshToken')
+        const { accessToken, refreshToken } = getTokens()
         if (!accessToken && !refreshToken) return
 
         const response = await api.get('/user/me', {
@@ -89,8 +110,7 @@ export const AuthContextProvider = ({ children }) => {
         })
         setUser(response.data)
       } catch (error) {
-        localStorage.removeItem('accessToken')
-        localStorage.removeItem('refreshToken')
+        removeTokens()
         console.error(error)
       }
     }
