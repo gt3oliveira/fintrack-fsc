@@ -1,6 +1,15 @@
 import { protectedApi, publicApi } from '@/lib/axios'
 
 export const UserService = {
+  /**
+   * Cria um novo usuário
+   * @param {Object} input - Objeto com os dados do usuário.
+   * @param {string} input.firstName
+   * @param {string} input.lastName
+   * @param {string} input.email
+   * @param {string} input.password
+   * @returns {Promise<{ id: string, firstName: string, lastName: string, email: string, tokens: { accessToken: string, refreshToken: string } }>} Retorna os dados do usuário criado
+   */
   signup: async (input) => {
     const response = await publicApi.post('/user', {
       first_name: input.firstName,
@@ -17,6 +26,14 @@ export const UserService = {
       tokens: response.data.tokens,
     }
   },
+
+  /**
+   * Loga um usuário
+   * @param {Object} input - Objeto com os dados do usuário.
+   * @param {string} input.email
+   * @param {string} input.password
+   * @returns {Promise<{ id: string, firstName: string, lastName: string, email: string, tokens: { accessToken: string, refreshToken: string } }>} Retorna os dados do usuário logado
+   */
   login: async (input) => {
     const response = await publicApi.post('/user/login', {
       email: input.email,
@@ -31,6 +48,11 @@ export const UserService = {
       tokens: response.data.tokens,
     }
   },
+
+  /**
+   * Busca os dados do usuário autenticado através do token.
+   * @returns {Promise<{ id: string, firstName: string, lastName: string, email: string }>} Usuário autenticado
+   */
   me: async () => {
     const response = await protectedApi.get('/user/me')
     return {
