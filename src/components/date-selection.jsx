@@ -29,10 +29,12 @@ const DateSelection = () => {
     // early return
     if (!date?.from || !date?.to) return
     const queryParams = new URLSearchParams()
-    queryParams.set('from', formatDateQueryParam(date.from))
-    queryParams.set('to', formatDateQueryParam(date.to))
+    const from = formatDateQueryParam(date.from)
+    const to = formatDateQueryParam(date.to)
+    queryParams.set('from', from)
+    queryParams.set('to', to)
     navigate(`/?${queryParams.toString()}`)
-    queryClient.invalidateQueries(['balance', user.id])
+    queryClient.invalidateQueries(['balance', user.id, from, to])
   }, [navigate, date, queryClient, user.id])
 
   return <DatePickerWithRange value={date} onChange={setDate} />
