@@ -62,4 +62,20 @@ export const UserService = {
       email: response.data.email,
     }
   },
+
+  /**
+   * Busca o balanço do usuário autenticado.
+   * @param {Object} input - Objeto com as datas de inicio e fim do intervalo.
+   * @param {string} input.from - Data de inicio (YYYY-MM-DD)
+   * @param {string} input.to - Data de fim (YYYY-MM-DD)
+   */
+  getBalance: async (input) => {
+    const queryParams = new URLSearchParams()
+    queryParams.set('from', input.from)
+    queryParams.set('to', input.to)
+    const response = await protectedApi.get(
+      `/user/me/balance?${queryParams.toString()}`
+    )
+    return response.data
+  },
 }
