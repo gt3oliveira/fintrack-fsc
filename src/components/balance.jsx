@@ -22,9 +22,10 @@ const Balance = () => {
     queryFn: () => {
       return UserService.getBalance({ from, to })
     },
+    staleTime: 1000 * 60 * 5,
+    enabled: Boolean(from) && Boolean(to) && Boolean(user.id),
   })
 
-  console.log({ data })
   return (
     <div className="grid grid-cols-2 gap-6">
       <BalanceItem
