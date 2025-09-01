@@ -196,7 +196,7 @@ const AddTransactionButton = () => {
                         onClick={() => field.onChange('INVESTMENT')}
                       >
                         <PiggyBankIcon className="text-primary-blue" />
-                        Gasto
+                        Invest
                       </Button>
                     </div>
                   </FormControl>
