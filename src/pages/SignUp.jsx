@@ -27,7 +27,7 @@ import { useSignupForm } from '@/forms/hooks/user'
 
 export function SignUpPage() {
   const { user, signup, isInitialized } = useAuthContext()
-  const { form } = useSignupForm()
+  const form = useSignupForm()
   const handleSubmit = (data) => signup(data)
 
   if (isInitialized) return null
