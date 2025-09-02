@@ -32,4 +32,24 @@ export const TransactionService = {
     const response = await protectedApi.get(`/transactions/me?${query}`)
     return response.data
   },
+
+  /**
+   * Atualiza uma transação para o usuário autenticado.
+   * @param {Object} input - Objeto com os dados da transação.
+   * @param {string} input.id - Id da transação
+   * @param {string} input.name - Nome da transação
+   * @param {number} input.amount - Valor da transação
+   * @param {date} input.date - Data da transação (YYYY-MM-DD)
+   * @param {string} input.type - Tipo da transação [EARNING, EXPENSE, INVESTMENT]
+   * @returns {Promise<{ id: string, name: string, amount: number, date: date, type: string }>} Transação atualizada
+   */
+  update: async (input) => {
+    const response = await protectedApi.patch(`/transactions/me/${input.id}`, {
+      name: input.name,
+      amount: input.amount,
+      date: input.date,
+      type: input.type,
+    })
+    return response.data
+  },
 }
