@@ -19,10 +19,13 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useAuthContext } from '@/contexts/auth'
 import { useLoginForm } from '@/forms/hooks/user'
 
 export function LoginPage() {
-  const { form, handleSubmit, user, isInitialized } = useLoginForm()
+  const { user, login, isInitialized } = useAuthContext()
+  const { form } = useLoginForm()
+  const handleSubmit = (data) => login(data)
 
   if (isInitialized) return null
   if (user) {

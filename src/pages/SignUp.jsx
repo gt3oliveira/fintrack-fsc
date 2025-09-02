@@ -21,10 +21,13 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useAuthContext } from '@/contexts/auth'
 import { useSignupForm } from '@/forms/hooks/user'
 
 export function SignUpPage() {
-  const { form, handleSubmit, user, isInitialized } = useSignupForm()
+  const { user, signup, isInitialized } = useAuthContext()
+  const { form } = useSignupForm()
+  const handleSubmit = (data) => signup(data)
 
   if (isInitialized) return null
   if (user) {

@@ -1,13 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import { useAuthContext } from '@/contexts/auth'
-
 import { loginFormSchema, signupFormSchema } from '../schemas/user'
 
 export const useLoginForm = () => {
-  const { user, login, isInitialized } = useAuthContext()
-
   const form = useForm({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -16,19 +12,10 @@ export const useLoginForm = () => {
     },
   })
 
-  const handleSubmit = (data) => login(data)
-
-  return {
-    form,
-    handleSubmit,
-    user,
-    isInitialized,
-  }
+  return form
 }
 
 export const useSignupForm = () => {
-  const { user, signup, isInitialized } = useAuthContext()
-
   const form = useForm({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
@@ -41,12 +28,5 @@ export const useSignupForm = () => {
     },
   })
 
-  const handleSubmit = (data) => signup(data)
-
-  return {
-    form,
-    handleSubmit,
-    user,
-    isInitialized,
-  }
+  return form
 }
