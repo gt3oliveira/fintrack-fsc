@@ -1,3 +1,4 @@
+import { Loader2Icon } from 'lucide-react'
 import { Link, Navigate } from 'react-router'
 
 import PasswordInput from '@/components/password-input'
@@ -71,7 +72,12 @@ export function LoginPage() {
               />
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Fazer login</Button>
+              <Button className="w-full" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && (
+                  <Loader2Icon className="animate-spin" />
+                )}
+                Fazer login
+              </Button>
             </CardFooter>
           </Card>
         </form>
