@@ -1,4 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Loader2Icon,
   PiggyBankIcon,
@@ -7,12 +6,9 @@ import {
   TrendingUpIcon,
 } from 'lucide-react'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
 import { NumericFormat } from 'react-number-format'
 import { toast } from 'sonner'
-import z from 'zod'
 
-import { useCreateTransaction } from '@/api/hooks/transaction'
 import {
   Dialog,
   DialogClose,
@@ -23,6 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useCreateTransactionForm } from '@/forms/hooks/transaction'
 
 import { Button } from './ui/button'
 import { DatePicker } from './ui/date-picker'
@@ -36,42 +33,18 @@ import {
 } from './ui/form'
 import { Input } from './ui/input'
 
-const formSchema = z.object({
-  name: z.string().trim().min(2, { message: 'O nome é obrigatório.' }),
-  amount: z.number({
-    required_error: 'O valor é obrigatório.',
-  }),
-  type: z.enum(['EARNING', 'EXPENSE', 'INVESTMENT']),
-  date: z.date({
-    required_error: 'A data é obrigatória.',
-  }),
-})
-
 const AddTransactionButton = () => {
   const [dialogIsOpen, setDialogIsOpen] = useState(false)
 
-  const { mutateAsync: createTransaction, isPending } = useCreateTransaction()
-
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      amount: 50,
-      date: new Date(),
-      type: 'EARNING',
-    },
-    shouldUnregister: true,
-  })
-
-  const onSubmit = async (data) => {
-    try {
-      await createTransaction(data)
+  const { form, onSubmit } = useCreateTransactionForm({
+    onSuccess: () => {
       setDialogIsOpen(false)
-      toast.success('Transação criada com sucesso!')
-    } catch (error) {
-      console.error(error)
-    }
-  }
+      toast.success('Transação adicionada com sucesso.')
+    },
+    onError: () => {
+      toast.error('Erro ao adicionar transação. Tente novamente.')
+    },
+  })
 
   return (
     <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
@@ -195,13 +168,19 @@ const AddTransactionButton = () => {
                   type="reset"
                   variant="secondary"
                   className="w-full"
-                  disabled={isPending}
+                  disabled={form.formState.isSubmitting}
                 >
                   Cancelar
                 </Button>
               </DialogClose>
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending && <Loader2Icon className="animate-spin" />}
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting && (
+                  <Loader2Icon className="animate-spin" />
+                )}
                 Adicionar Transação
               </Button>
             </DialogFooter>
