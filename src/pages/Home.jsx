@@ -4,6 +4,7 @@ import AddTransactionButton from '@/components/add-transaction-button'
 import Balance from '@/components/balance'
 import DateSelection from '@/components/date-selection'
 import Header from '@/components/header'
+import TransactionsTable from '@/components/transactions-table'
 import { useAuthContext } from '@/contexts/auth'
 
 export function HomePage() {
@@ -28,6 +29,7 @@ export function HomePage() {
         <div className="grid grid-cols-[2fr_1fr]">
           <Balance />
         </div>
+        <TransactionsTable />
       </div>
     </div>
   )
