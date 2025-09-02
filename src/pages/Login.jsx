@@ -1,7 +1,4 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
 import { Link, Navigate } from 'react-router'
-import { z } from 'zod'
 
 import PasswordInput from '@/components/password-input'
 import { Button } from '@/components/ui/button'
@@ -22,32 +19,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useAuthContext } from '@/contexts/auth'
-
-const loginSchema = z.object({
-  email: z
-    .string()
-    .email({ message: 'E-mail inválido.' })
-    .trim()
-    .min(1, { message: 'O e-mail é obrigatório.' }),
-  password: z
-    .string()
-    .trim()
-    .min(6, { message: 'A senha deve ter no mínimo 6 caracteres.' }),
-})
+import { useLoginForm } from '@/forms/hooks/user'
 
 export function LoginPage() {
-  const { user, login, isInitialized } = useAuthContext()
-
-  const methods = useForm({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  })
-
-  const handleSubmit = (data) => login(data)
+  const { form, handleSubmit, user, isInitialized } = useLoginForm()
 
   if (isInitialized) return null
   if (user) {
@@ -56,8 +31,8 @@ export function LoginPage() {
 
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center gap-3">
-      <Form {...methods}>
-        <form onSubmit={methods.handleSubmit(handleSubmit)}>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <Card className="w-[500px]">
             <CardHeader>
               <CardTitle>Entre na sua conta</CardTitle>
@@ -65,7 +40,7 @@ export function LoginPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -79,7 +54,7 @@ export function LoginPage() {
               />
 
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>

@@ -1,8 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
 import { Link, Navigate } from 'react-router'
-import { z } from 'zod'
 
 import PasswordInput from '@/components/password-input'
 import { Button } from '@/components/ui/button'
@@ -24,52 +21,10 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useAuthContext } from '@/contexts/auth'
-
-const signupSchema = z
-  .object({
-    firstName: z.string().trim().min(2, { message: 'O nome é obrigatório.' }),
-    lastName: z
-      .string()
-      .trim()
-      .min(2, { message: 'O sobrenome é obrigatório.' }),
-    email: z
-      .string()
-      .email({ message: 'E-mail inválido.' })
-      .trim()
-      .min(1, { message: 'O e-mail é obrigatório.' }),
-    password: z
-      .string()
-      .trim()
-      .min(6, { message: 'A senha deve ter no mínimo 6 caracteres.' }),
-    confirmPassword: z.string().trim().min(6, {
-      message: 'A confirmação de senha deve ter no mínimo 6 caracteres.',
-    }),
-    terms: z.boolean().refine((value) => value === true, {
-      message: 'Você deve aceitar os termos.',
-    }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'As senhas devem ser iguais.',
-    path: ['confirmPassword'],
-  })
+import { useSignupForm } from '@/forms/hooks/user'
 
 export function SignUpPage() {
-  const { user, signup, isInitialized } = useAuthContext()
-
-  const methods = useForm({
-    resolver: zodResolver(signupSchema),
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      terms: false,
-    },
-  })
-
-  const handleSubmit = (data) => signup(data)
+  const { form, handleSubmit, user, isInitialized } = useSignupForm()
 
   if (isInitialized) return null
   if (user) {
@@ -78,8 +33,8 @@ export function SignUpPage() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-4">
-      <Form {...methods}>
-        <form onSubmit={methods.handleSubmit(handleSubmit)}>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <Card className="w-[500px]">
             <CardHeader>
               <CardTitle>Crie a sua conta</CardTitle>
@@ -87,7 +42,7 @@ export function SignUpPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
@@ -101,7 +56,7 @@ export function SignUpPage() {
               />
 
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
@@ -115,7 +70,7 @@ export function SignUpPage() {
               />
 
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -129,7 +84,7 @@ export function SignUpPage() {
               />
 
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
@@ -143,7 +98,7 @@ export function SignUpPage() {
               />
 
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
@@ -160,7 +115,7 @@ export function SignUpPage() {
               />
 
               <FormField
-                control={methods.control}
+                control={form.control}
                 name="terms"
                 render={({ field }) => (
                   <FormItem>
