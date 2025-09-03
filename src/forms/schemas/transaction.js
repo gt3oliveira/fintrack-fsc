@@ -10,3 +10,7 @@ export const createTransactionFormSchema = z.object({
     required_error: 'A data é obrigatória.',
   }),
 })
+
+export const updateTransactionFormSchema = createTransactionFormSchema.extend({
+  id: z.string().uuid(),
+})
